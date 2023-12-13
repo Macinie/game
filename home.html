@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enhanced Rock, Paper, Scissors Game</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    function logout() {
+      let response = confirm("Are you sure you want to go back?");
+      if (response) {
+        window.close('home.html')
+        window.open('index.html')
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <h1>Rock, Paper, Scissors</h1> <img id="image1" src="img/logo.png" alt="Image 1">
+  <div id="game-container">
+    <h3> Click between the 3 choices</h3>
+    <div id="choices">
+      <button class="choice-button" onclick="makeChoice('rock')">
+        <span>Rock</span>
+        <img src="img/rock.png" alt="Rock">
+      </button>
+
+      <button class="choice-button" onclick="makeChoice('paper')">
+        <span>Paper</span>
+        <img src="img/paper.png" alt="Paper">
+      </button>
+
+      <button class="choice-button" onclick="makeChoice('scissors')">
+        <span>Scissors</span>
+        <img src="img/scissor.png" alt="Scissors">
+      </button>
+    </div>
+    <p id="result">Choose your move!</p>
+    <div id="player-score-container">
+      <p>Player Score: <span id="player-score">0</span></p>
+    </div>
+    <div id="opponent-score-container">
+      <p>Opponent Score: <span id="opponent-score">0</span></p>
+    </div>
+  </div>
+  <button type="submit" onclick="logout()"> Back</button>
+
+  <script>
+    let playerScore = 0;
+    let opponentScore = 0;
+
+    function makeChoice(playerChoice) {
+      const choices = ['rock', 'paper', 'scissors'];
+      const opponentChoice = choices[Math.floor(Math.random() * choices.length)];
+
+      const resultElement = document.getElementById('result');
+      const playerScoreElement = document.getElementById('player-score');
+      const opponentScoreElement = document.getElementById('opponent-score');
+
+      resultElement.innerText = `You chose ${playerChoice}. Opponent chose ${opponentChoice}.`;
+
+      if (playerChoice === opponentChoice) {
+        resultElement.innerText += " It's a tie!";
+      } else if (
+        (playerChoice === 'rock' && (opponentChoice === 'scissors')) ||
+        (playerChoice === 'paper' && (opponentChoice === 'rock')) ||
+        (playerChoice === 'scissors' && (opponentChoice === 'paper'))
+      ) {
+        resultElement.innerText += ' You win!';
+        playerScore++;
+      } else {
+        resultElement.innerText += ' Opponent wins!';
+        opponentScore++;
+      }
+
+      playerScoreElement.innerText = playerScore;
+      opponentScoreElement.innerText = opponentScore;
+
+      if (playerScore === 5 && opponentScore < 5) {
+        resultElement.innerText = 'Congratulations! You won the game!';
+        showNotification('You won!', 'Try Again', 'Exit');
+      }
+
+      if (opponentScore === 5 && playerScore < 5) {
+        resultElement.innerText = 'Opponent won the game. Better luck next time!';
+        showNotification('Game Over', 'Try Again', 'Exit');
+      }
+    }
+
+    function disableButtons() {
+      const buttons = document.querySelectorAll('.choice-button');
+      buttons.forEach(button => {
+        button.disabled = true;
+      });
+    }
+
+    function showNotification(message, option1, option2) {
+      const notification = window.confirm(`${message}\n\n${option1} or ${option2}`);
+
+      if (notification) {
+        resetGame();
+      } else {
+        window.close();
+      }
+    }
+
+    function resetGame() {
+      playerScore = 0;
+      opponentScore = 0;
+      updateScores();
+      enableButtons();
+    }
+
+    function updateScores() {
+      const playerScoreElement = document.getElementById('player-score');
+      const opponentScoreElement = document.getElementById('opponent-score');
+      playerScoreElement.innerText = playerScore;
+      opponentScoreElement.innerText = opponentScore;
+    }
+
+    function enableButtons() {
+      const buttons = document.querySelectorAll('.choice-button');
+      buttons.forEach(button => {
+        button.disabled = false;
+      });
+    }
+  </script>
+
+</body>
+
+</html>
